@@ -14,8 +14,7 @@ public class ProjectFile {
 
     private boolean isLegitimate = false;
 
-    private List<String> mavenProjectSrcDir = new ArrayList<>();
-    private List<String> vueProjectSrcDir = new ArrayList<>();
+    private List<ModuleFile> modules;
 
     public void setSourceFilePath(String sourceFilePath) {
         sourceFile = new File(sourceFilePath);

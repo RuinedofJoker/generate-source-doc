@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -13,13 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ModuleNodeTree {
-    private ProjectFile projectFile;
-    private ModuleNodeTree moduleHome;
-    private ModuleNodeTree srcDir;
-    private ModuleNodeTree configurationFile;
     private ModuleNodeTree parentDir;
-    private List<ModuleNodeTree> childDir;
-    private List<ModuleNodeTree> childFile;
+    private List<ModuleNodeTree> childDir = new ArrayList<>();
+    private List<ModuleNodeTree> childFile = new ArrayList<>();
     private File currentFile;
-    private boolean isDir;
 }
