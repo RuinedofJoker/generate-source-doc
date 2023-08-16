@@ -88,6 +88,14 @@ public class CollectProjectSrcService {
         return projectHome;
     }
 
+    /**
+     * 根据坐标文件寻找目标文件
+     * @param currentFile 当前传入的坐标文件
+     * @param targetFileName 目标文件名
+     * @param isDir 目标文件是否为目录
+     * @param relativePosition
+     * @return 目标文件与坐标文件的相对位置(0代表同级,+1代表目标文件为坐标文件子一级,-1代表目标文件为坐标文件父一级)
+     */
     public File findFileFromCurrentFile(File currentFile, String targetFileName, boolean isDir, int relativePosition) {
         File result = null;
         if (relativePosition <= 0) {
