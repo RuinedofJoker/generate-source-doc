@@ -8,7 +8,7 @@
         <version>2.7.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.hongying</groupId>
+    <groupId>org.joker</groupId>
     <artifactId>generate-source-doc</artifactId>
     <version>1.0.0</version>
     <name>generate-source-doc</name>

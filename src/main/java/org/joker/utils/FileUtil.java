@@ -1,6 +1,6 @@
-package com.hongying.utils;
+package org.joker.utils;
 
-import com.hongying.pojo.ProjectFile;
+import org.joker.pojo.ProjectFile;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

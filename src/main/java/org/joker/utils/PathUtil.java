@@ -1,4 +1,4 @@
-package com.hongying.utils;
+package org.joker.utils;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;

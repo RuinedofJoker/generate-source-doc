@@ -1,11 +1,10 @@
-package com.hongying.ui;
+package org.joker.ui;
 
-import com.hongying.common.AwareContent;
-import com.hongying.pojo.ProjectFile;
-import com.hongying.utils.FileUtil;
-import com.hongying.utils.StringUtil;
+import org.joker.common.AwareContent;
+import org.joker.pojo.ProjectFile;
+import org.joker.utils.FileUtil;
+import org.joker.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 

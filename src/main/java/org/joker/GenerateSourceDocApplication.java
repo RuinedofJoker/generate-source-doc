@@ -1,6 +1,6 @@
-package com.hongying;
+package org.joker;
 
-import com.hongying.ui.AppMain;
+import org.joker.ui.AppMain;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;

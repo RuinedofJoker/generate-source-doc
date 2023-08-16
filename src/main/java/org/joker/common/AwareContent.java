@@ -1,4 +1,4 @@
-package com.hongying.common;
+package org.joker.common;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

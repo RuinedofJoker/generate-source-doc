@@ -1,4 +1,4 @@
-package com.hongying.pojo;
+package org.joker.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
