@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 public class ModuleNodeTree {
     private ModuleNodeTree parentDir;
-    private List<ModuleNodeTree> childDir = new ArrayList<>();
-    private List<ModuleNodeTree> childFile = new ArrayList<>();
+    private List<ModuleNodeTree> packageList = new ArrayList<>();
+    private List<ModuleNodeTree> codeList = new ArrayList<>();
     private File currentFile;
 }

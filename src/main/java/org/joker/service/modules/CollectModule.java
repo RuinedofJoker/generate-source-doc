@@ -1,18 +1,15 @@
-package org.joker.service;
+package org.joker.service.modules;
 
 import org.joker.pojo.ModuleFile;
 import org.joker.pojo.ModuleNodeTree;
 import org.joker.pojo.ProjectFile;
-import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
-public class CollectProjectSrcService {
+public class CollectModule {
 
     /**
      * 根据源目录获取目录内所有项目src文件
@@ -21,7 +18,7 @@ public class CollectProjectSrcService {
      * @param configurationWithModule 配置文件名与模块根目录的相对位置(0代表同级,+1代表目标文件为坐标文件子一级)
      * @return
      */
-    public List<ModuleFile> collectModules(ProjectFile projectFile, Map<String, Integer> srcWithModule, Map<String, Integer> configurationWithModule, boolean allConf) {
+    public List<ModuleFile> collectModulesBySrcAndConfiguration(ProjectFile projectFile, Map<String, Integer> srcWithModule, Map<String, Integer> configurationWithModule, boolean allConf) {
         List<ModuleFile> moduleFilesResult = new ArrayList<>();
         recursionSearchModules(moduleFilesResult, projectFile.getSourceFile(), srcWithModule, configurationWithModule, allConf);
         return moduleFilesResult;
@@ -165,17 +162,5 @@ public class CollectProjectSrcService {
         }
 
         return null;
-    }
-
-    public static void main(String[] args) {
-        ProjectFile projectFile = new ProjectFile();
-        projectFile.setSourceFilePath("C:\\code\\长沙经开区产业链供需集市\\后端\\jkqcyl");
-        HashMap<String, Integer> src = new HashMap<>();
-        src.put("src", 1);
-        HashMap<String, Integer> con = new HashMap<>();
-        con.put("pom.xml", 1);
-        List<ModuleFile> moduleFiles = new CollectProjectSrcService().collectModules(projectFile, src, con, true);
-        projectFile.setModules(moduleFiles);
-        System.out.println();
     }
 }

@@ -11,9 +11,9 @@ import javax.annotation.PostConstruct;
 @Data
 public class FileUtil {
     private ProjectFile projectFile;
-    @Value("${hy.file.source.path}")
+    @Value("${generate-info.file.source.path}")
     String initReadPath;
-    @Value("${hy.file.target.path}")
+    @Value("${generate-info.file.target.path}")
     String initWritePath;
 
     public void setSourcePath(String sourcePath) {

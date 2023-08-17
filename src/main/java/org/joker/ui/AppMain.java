@@ -1,7 +1,10 @@
 package org.joker.ui;
 
 import org.joker.common.AwareContent;
+import org.joker.pojo.ModuleFile;
 import org.joker.pojo.ProjectFile;
+import org.joker.service.CollectModuleService;
+import org.joker.service.PrintProjectInfoService;
 import org.joker.utils.FileUtil;
 import org.joker.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,8 @@ import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @Lazy
@@ -22,6 +27,12 @@ public class AppMain extends JFrame {
 
     @Autowired
     private FileUtil fileUtil;
+    @Autowired
+    private CollectModuleService collectModuleService;
+
+    @Autowired
+    private PrintProjectInfoService printProjectInfoService;
+
 
     FlowLayout layout = new FlowLayout();
 
@@ -61,11 +72,21 @@ public class AppMain extends JFrame {
             taskStateLabel.setText("任务正在处理,请稍后");
 
             System.out.println("------------------------任务开始,请不要打开读取目录中的文件------------------------");
+            //开始收集模块
             ProjectFile projectFile = fileUtil.getProjectFile();
+            List<ModuleFile> mavenModuleFiles = collectModuleService.getCollectMavenModule().collectModules(projectFile);
+            List<ModuleFile> viteModuleFiles = collectModuleService.getCollectViteModule().collectModules(projectFile);
+            mavenModuleFiles.addAll(viteModuleFiles);
+            projectFile.setModules(mavenModuleFiles);
+            //收集模块完成
+
+            //开始收集模块内所有
+
+            //生成描述文档
+            printProjectInfoService.createProjectDescriptionFile(projectFile);
             System.out.println();
             //只有选择的文件合法才能进入处理
             if (fileUtil.fileIsLegitimate()) {
-
                 taskStateLabel.setText("任务完成");
             }else {
                 taskStateLabel.setText("文件不合法");
