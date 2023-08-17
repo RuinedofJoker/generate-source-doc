@@ -80,7 +80,7 @@ public class AppMain extends JFrame {
             projectFile.setModules(mavenModuleFiles);
             //收集模块完成
 
-            //开始收集模块内所有
+            //开始收集模块内所有源代码
 
             //生成描述文档
             printProjectInfoService.createProjectDescriptionFile(projectFile);

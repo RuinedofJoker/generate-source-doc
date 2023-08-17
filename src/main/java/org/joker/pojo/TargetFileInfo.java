@@ -15,6 +15,7 @@ public class TargetFileInfo {
     private String templateReplace2;
     private String template3;
     private String templateReplace3;
+    private String segmentationSign1;
 
     public String getTemplate1(String title) {
         return template1.replace(templateReplace1, title);

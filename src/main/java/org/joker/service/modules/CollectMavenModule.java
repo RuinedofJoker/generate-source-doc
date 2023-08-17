@@ -16,7 +16,7 @@ public class CollectMavenModule extends CollectModule implements AbstractCollect
         for (ModuleFile moduleFile : moduleFiles) {
             moduleFile.setModuleType("maven");
             Set<String> extensionNames = new HashSet<>();
-            extensionNames.add(".java");
+            extensionNames.add("java");
             moduleFile.setExtensionNameSet(extensionNames);
         }
         return moduleFiles;

@@ -11,3 +11,4 @@ generate-info:
       template-replace2: "%s"
       template3: "### %s"
       template-replace3: "%s"
+      segmentation-sign1: "=================================================\r\n"

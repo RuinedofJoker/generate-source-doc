@@ -1,19 +1,25 @@
 package org.joker.service;
 
 import org.joker.pojo.ModuleFile;
+import org.joker.pojo.ModuleNodeTree;
 import org.joker.pojo.ProjectFile;
 import org.joker.pojo.TargetFileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class PrintProjectInfoService {
 
     @Autowired
     private TargetFileInfo targetFileInfo;
+
+    @Autowired
+    private CollectCodeFileService collectCodeFileService;
 
     /**
      * 生成项目的描述文件
@@ -40,7 +46,9 @@ public class PrintProjectInfoService {
         printReadMe(descriptionFile, findReadMe(projectHomeFile));
         appendText(descriptionFile, "\r\n\r\n");
 
-
+        for (ModuleFile moduleFile : modules) {
+            printModuleInfoToTextFile(descriptionFile, moduleFile);
+        }
     }
 
     /**
@@ -80,11 +88,72 @@ public class PrintProjectInfoService {
         return targetFile;
     }
 
+    /**
+     * 生成模块信息
+     * @param targetFile
+     * @param module
+     */
     public void printModuleInfoToTextFile(File targetFile, ModuleFile module) {
-        appendText(targetFile, module.getModuleHome().getCurrentFile().getName());
-        printReadMe(targetFile, module.getModuleHome().getCurrentFile());
+        String moduleName = module.getModuleHome().getCurrentFile().getName();
+        appendText(targetFile, targetFileInfo.getSegmentationSign1());
+        appendText(targetFile, targetFileInfo.getTemplate2(module.getModuleHome().getCurrentFile().getName()) + "\r\n");
+        appendText(targetFile, targetFileInfo.getSegmentationSign1());
+        printReadMe(targetFile, findReadMe(module.getModuleHome().getCurrentFile()));
+        appendText(targetFile, "\r\n");
+
+        appendText(targetFile, targetFileInfo.getTemplate3(moduleName + "项目配置文件：") + "\r\n\r\n");
+        printModuleConfigurations(targetFile, module.getConfigurationFile());
+        appendText(targetFile, "\r\n\r\n");
+
+        appendText(targetFile, targetFileInfo.getTemplate3("项目源代码：\r\n\r\n"));
+
+        //广度优先打印源码
+        List<ModuleNodeTree> srcDirList = module.getSrcDir();
+        for (int i = 1; i <= srcDirList.size(); i++) {
+            appendText(targetFile, targetFileInfo.getTemplate3(moduleName + "模块第" + i + "个源代码目录") + "\r\n\r\n");
+            printSourceCode(targetFile, srcDirList.get(i - 1), module);
+            appendText(targetFile, "\r\n");
+        }
+
+        appendText(targetFile, "\r\n\r\n\r\n");
     }
 
+    public void printSourceCode(File targetFile, ModuleNodeTree srcNode, ModuleFile module) {
+        File srcRootFile = srcNode.getCurrentFile();
+        printCurrentLayerCode(targetFile, srcRootFile, module);
+    }
+    private void printCurrentLayerCode(File targetFile, File packageDir, ModuleFile module) {
+        Set<String> extensionNameSet = module.getExtensionNameSet();
+        File[] childFiles = packageDir.listFiles();
+        List<File> childPackages = new ArrayList<>();
+        for (File childFile : childFiles) {
+            if (childFile.isDirectory()) {
+                childPackages.add(childFile);
+            }else {
+                if (extensionNameSet.contains(collectCodeFileService.getExtensionName(childFile))) {
+                    appendText(targetFile, targetFileInfo.getSegmentationSign1() + childFile.getName() + "\r\n" + targetFileInfo.getSegmentationSign1());
+                    appendFile(childFile, targetFile);
+                    appendText(targetFile, "\r\n");
+                }
+            }
+        }
+
+        for (File childPackage : childPackages) {
+            printCurrentLayerCode(targetFile, childPackage, module);
+        }
+    }
+
+    public void printModuleConfigurations(File targetFile, List<ModuleNodeTree> configurationList) {
+        for (ModuleNodeTree configuration : configurationList) {
+            File configurationFile = configuration.getCurrentFile();
+            if (configurationFile == null || !configurationFile.exists()) {
+                return;
+            }
+            appendText(targetFile, targetFileInfo.getTemplate3(configurationFile.getName()) + ":\r\n");
+
+            appendFile(configurationFile, targetFile);
+        }
+    }
 
     /**
      * 追加一个指定文本字符串
@@ -101,17 +170,19 @@ public class PrintProjectInfoService {
     }
 
     /**
-     * 写入模块中的readme
-     * @param targetFile
-     * @param readme
+     * 追加复制文件
+     * @param src
+     * @param dst
      */
-    private void printReadMe(File targetFile, File readme) {
-        if (readme == null || !readme.exists()) {
+    private void appendFile(File src, File dst) {
+        if (src == null || dst == null) {
             return;
         }
-        appendText(targetFile, targetFileInfo.getTemplate2("README") + "\r\n");
-        try (FileInputStream fis = new FileInputStream(readme);
-             FileOutputStream fos = new FileOutputStream(targetFile, true)) {
+        if (!src.exists() || !dst.exists()) {
+            return;
+        }
+        try (FileInputStream fis = new FileInputStream(src);
+             FileOutputStream fos = new FileOutputStream(dst, true)) {
             byte[] buffer = new byte[1024];
             int len;
             while ((len = fis.read(buffer)) != -1) {
@@ -123,6 +194,19 @@ public class PrintProjectInfoService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 写入模块中的readme
+     * @param targetFile
+     * @param readme
+     */
+    private void printReadMe(File targetFile, File readme) {
+        if (readme == null || !readme.exists()) {
+            return;
+        }
+        appendText(targetFile, targetFileInfo.getTemplate3("README") + "\r\n");
+        appendFile(readme, targetFile);
     }
 
     /**

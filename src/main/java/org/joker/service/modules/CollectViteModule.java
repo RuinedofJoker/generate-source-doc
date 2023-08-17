@@ -17,10 +17,10 @@ public class CollectViteModule extends CollectModule implements AbstractCollectM
         for (ModuleFile moduleFile : moduleFiles) {
             moduleFile.setModuleType("vite");
             Set<String> extensionNames = new HashSet<>();
-            extensionNames.add(".vue");
-            extensionNames.add(".html");
-            extensionNames.add(".css");
-            extensionNames.add(".js");
+            extensionNames.add("vue");
+            extensionNames.add("html");
+            extensionNames.add("css");
+            extensionNames.add("js");
             moduleFile.setExtensionNameSet(extensionNames);
         }
         return moduleFiles;

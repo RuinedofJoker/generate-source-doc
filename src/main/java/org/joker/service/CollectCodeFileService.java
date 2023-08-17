@@ -24,5 +24,15 @@ public class CollectCodeFileService {
         }
     }
 
+    public String getExtensionName(File code) {
+        if (!code.exists()) {
+            return "";
+        }
+        String fileName = code.getName();
+        return getExtensionName(code.getName());
+    }
 
+    public String getExtensionName(String fileName) {
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
+    }
 }
