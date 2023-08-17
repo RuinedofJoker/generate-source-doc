@@ -21,14 +21,14 @@ public class CollectProjectSrcService {
      * @param configurationWithModule 配置文件名与模块根目录的相对位置(0代表同级,+1代表目标文件为坐标文件子一级)
      * @return
      */
-    public List<ModuleFile> collectModules(ProjectFile projectFile, Map<String, Integer> srcWithModule, Map<String, Integer> configurationWithModule) {
+    public List<ModuleFile> collectModules(ProjectFile projectFile, Map<String, Integer> srcWithModule, Map<String, Integer> configurationWithModule, boolean allConf) {
         List<ModuleFile> moduleFilesResult = new ArrayList<>();
-        recursionSearchModules(moduleFilesResult, projectFile.getSourceFile(), srcWithModule, configurationWithModule);
+        recursionSearchModules(moduleFilesResult, projectFile.getSourceFile(), srcWithModule, configurationWithModule, allConf);
         return moduleFilesResult;
     }
 
-    private void recursionSearchModules(List<ModuleFile> moduleFilesResult, File currentFile, Map<String, Integer> srcWithModule, Map<String, Integer> configurationWithModule) {
-        ModuleFile fileNodeTree = judgeFileIsModule(currentFile, srcWithModule, configurationWithModule);
+    private void recursionSearchModules(List<ModuleFile> moduleFilesResult, File currentFile, Map<String, Integer> srcWithModule, Map<String, Integer> configurationWithModule, boolean allConf) {
+        ModuleFile fileNodeTree = judgeFileIsModule(currentFile, srcWithModule, configurationWithModule, allConf);
         if (fileNodeTree != null) {
             moduleFilesResult.add(fileNodeTree);
             return;
@@ -41,7 +41,7 @@ public class CollectProjectSrcService {
         }
         File[] childFiles = currentFile.listFiles();
         for (File childFile : childFiles) {
-            recursionSearchModules(moduleFilesResult, childFile, srcWithModule, configurationWithModule);
+            recursionSearchModules(moduleFilesResult, childFile, srcWithModule, configurationWithModule, allConf);
         }
     }
 
@@ -52,7 +52,7 @@ public class CollectProjectSrcService {
      * @param configurationWithModule
      * @return
      */
-    private ModuleFile judgeFileIsModule(File moduleHomeFile, Map<String, Integer> srcWithModule, Map<String, Integer> configurationWithModule) {
+    private ModuleFile judgeFileIsModule(File moduleHomeFile, Map<String, Integer> srcWithModule, Map<String, Integer> configurationWithModule, boolean allConf) {
         if (!moduleHomeFile.exists()) {
             return null;
         }
@@ -81,7 +81,7 @@ public class CollectProjectSrcService {
             }
         }
 
-        if (src.size() == srcWithModule.size() && configuration.size() == configurationWithModule.size()) {
+        if (src.size() == srcWithModule.size() && ((!allConf) || configuration.size() == configurationWithModule.size())) {
             moduleHome = new ModuleFile();
             ModuleNodeTree moduleHomeNode = new ModuleNodeTree();
             moduleHomeNode.setCurrentFile(moduleHomeFile);
@@ -169,12 +169,12 @@ public class CollectProjectSrcService {
 
     public static void main(String[] args) {
         ProjectFile projectFile = new ProjectFile();
-        projectFile.setSourceFilePath("C:\\code\\长沙经开区产业链供需集市\\后端\\jkqcyl\\ruoyi-admin");
+        projectFile.setSourceFilePath("C:\\code\\长沙经开区产业链供需集市\\后端\\jkqcyl");
         HashMap<String, Integer> src = new HashMap<>();
-        src.put("src", 0);
+        src.put("src", 1);
         HashMap<String, Integer> con = new HashMap<>();
-        src.put("pom.xml", 0);
-        List<ModuleFile> moduleFiles = new CollectProjectSrcService().collectModules(projectFile, src, con);
+        con.put("pom.xml", 1);
+        List<ModuleFile> moduleFiles = new CollectProjectSrcService().collectModules(projectFile, src, con, true);
         projectFile.setModules(moduleFiles);
         System.out.println();
     }
