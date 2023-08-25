@@ -2,7 +2,7 @@ generate-info:
   file:
     source:
       #path: C:/code/\u957F\u6C99\u7ECF\u5F00\u533A\u4EA7\u4E1A\u94FE\u4F9B\u9700\u96C6\u5E02/\u540E\u7AEF/jkqcyl
-      path: C:\\code\\长沙经开区产业链供需集市\\后端\\jkqcyl\\ruoyi-admin
+      path: C:\\code\\长沙经开区产业链供需集市\\后端\\jkqcyl
     target:
       path: C:\\Users\\HP\\Desktop\\test
       template1: "# %s"
